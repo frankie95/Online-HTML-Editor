@@ -1,0 +1,246 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>CodePlayer</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+   
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+  	<style>
+  		
+  		body {
+  			margin:0;
+  			padding;
+  		
+  		}
+  	
+  		#menuBar {
+  			width:100%;
+  			height:40px;
+  			background-color:#EDEDED;
+  			border-bottom:1px solid #BFBFBF;
+  			font-family: "Myriad Set Pro","Helvetica Neue","Helvetica","Arial",sans-serif;
+  			overflow:hidden;
+  		}
+  	
+  		#logo {
+  			padding-top:7px;
+  			padding-left:10px;
+  			font-size:1.2em;
+  			font-weight: bold;
+  		}
+  		
+  		#buttonDiv {
+			position:relative;
+			top:-25px;
+			right:10px;
+  			float:right;
+  		
+  		}
+  		
+  		#runButton {
+  			font-size:1.1em;
+  		
+  		}
+  		
+  		#toggles {
+  			width:246.5px;
+  			height:32px;
+  			margin:auto;
+  			list-style:none;
+  			border:1px solid #BFBFBF;
+  			border-radius:5px;
+  			position:relative;
+  			top:-28px;
+  			padding:0;
+  		}
+  		
+  		#toggles li {
+  			float:left;
+  			padding-top:5px;
+  			border-right:1px solid #BFBFBF;
+  			padding-bottom:8px;
+  			padding-left:13px;
+  			padding-right:13px;
+  		}
+  		
+  		#clear {
+  			clear:both;
+  		}
+  		
+  		.codeContainer {
+  			
+  			height:100%;
+  			width:50%;
+  			float:left;
+  			position:relative;
+  		}
+  		
+  		.codeContainer textarea {
+  			width:100%;
+  			height:100%;
+  			border:none;
+  			border-right:1px solid #BFBFBF;
+  			padding-top:5px;
+  			padding-left:5px;
+  			font-size:1.1em;
+  			box-sizing:border-box;
+  		}
+  		
+  		.codeLabel {
+  			position:absolute;
+  			right:10px;
+  			top:10px;
+  			color:#2DBFFF;
+  			font-family: "Myriad Set Pro","Helvetica Neue","Helvetica","Arial",sans-serif;
+  		}
+  		
+  		#cssContainer,#jsContainer {
+  			display:none;
+  		
+  		}
+  		
+  		iframe {
+  			height:100%;
+  			width:98%;
+  			position:relative;
+  			left:5px;
+  			border:none;
+  		}
+  		
+  		.selected {
+  		
+  			background-color:yellow;
+  		}
+  		
+  		.first {
+  			border-top-left-radius:5px;
+  			border-bottom-left-radius:5px;
+  		}
+  		
+  		.last {
+  			border-top-right-radius:5px;
+  			border-bottom-right-radius:5px;
+  		}
+  		
+  		#CSSContainer,#JSContainer {
+  		
+  			display:none;
+  		}
+  		
+  	</style>
+  	
+</head>
+
+<body>
+	
+	<div id="wrapper">
+	
+		<div id="menuBar">
+		
+			<div id="logo">
+			
+				CodePlayer
+			
+			</div>
+			
+			<div id="buttonDiv">
+			
+				<button id="runButton">Run</button>
+			
+			</div>
+			
+			<ul id="toggles">
+				
+				<li class="toggle selected first">HTML</li>
+				<li class="toggle">CSS</li>
+				<li class="toggle">JS</li>
+				<li class="toggle selected last" style="border:none">Result</li>
+			
+			</ul>
+			
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="codeContainer" id="HTMLContainer">
+		
+			<div class="codeLabel">HTML</div>
+			
+			<textarea id="htmlCode">"Example Code"</textarea>
+			
+		</div>
+		
+		<div class="codeContainer" id="CSSContainer">
+		
+			<div class="codeLabel">CSS</div>
+			
+			<textarea id="cssCode"></textarea>
+			
+		</div>
+		
+		<div class="codeContainer" id="JSContainer">
+		
+			<div class="codeLabel">JS</div>
+			
+			<textarea id="jsCode">"Example Code"</textarea>
+			
+		</div>
+		
+		<div class="codeContainer" id="ResultContainer">
+		
+			<div class="codeLabel">Result</div>
+			
+			<iframe id="resultFrame"></iframe>
+			
+		</div>
+		
+	</div>
+	
+	<script>
+		
+		var windowHeight=$(window).height();
+		var menuBarHeight=$("#menuBar").height();
+		
+		var codeContainerHeight=windowHeight-menuBarHeight;
+		
+		$(".codeContainer").height(codeContainerHeight+"px");
+		
+		$(".toggle").click(function(){
+			
+			$(this).toggleClass("selected");
+			
+			var activeDiv=$(this).html();
+			
+			$("#"+activeDiv+"Container").toggle();
+		
+			var showingDiv=$(".codeContainer").filter(function(){
+			
+				return($(this).css("display")!="none");
+			
+			}).length;
+
+			var width=100/showingDiv;
+			
+			$(".codeContainer").css("width",width+"%");
+			
+		});
+		
+		$("#runButton").click(function() {
+		
+			$("iframe").contents().find("html").html("<style>"+$("#cssCode").val()+"</style>"+$("#htmlCode").val());
+		
+		
+		document.getElementById("resultFrame").contentWindow.eval($("#jsCode").val());
+		
+		});
+		
+	</script>
+	
+</body>
+</html>
